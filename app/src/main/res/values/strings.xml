@@ -3,4 +3,6 @@
     <string name="open_now_button_text">Open now</string>
     <string name="open_now_stub_text">Открываем (нет)</string>
     <string name="loadingText">Загружаем контент</string>
+    <string name="errorText">Не удалось загрузить данные</string>
+    <string name="retry">Повторить</string>
 </resources>

@@ -2,6 +2,7 @@ package com.jeench.shoplist;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -13,15 +14,15 @@ import android.widget.Toast;
 import com.jeench.shoplist.data.Item;
 import com.jeench.shoplist.databinding.ShopListItemBinding;
 import com.jeench.shoplist.ui.BindingListAdapter;
+import com.jeench.shoplist.ui.ErrorDialog;
 import com.jeench.shoplist.ui.LoadingDialog;
 
 import java.util.List;
 
-public class GoodsListActivity extends AppCompatActivity {
-    public static final String TAG = GoodsListActivity.class.getCanonicalName();
-
+public class GoodsListActivity extends AppCompatActivity implements ErrorDialog.OnErrorDialogRetryClickListener {
     private BindingListAdapter<Item, ShopListItemBinding> adapter;
     private LoadingDialog loadingDialog;
+    private GoodsListActivityViewModel goodsListActivityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +38,8 @@ public class GoodsListActivity extends AppCompatActivity {
             loadingDialog.show(fragmentManager, LoadingDialog.TAG);
         }
 
-        ViewModelProviders
-                .of(this)
-                .get(GoodsListActivityViewModel.class)
-                .get()
-                .observe(this, this::onItemsLoaded);
+        goodsListActivityViewModel = ViewModelProviders.of(this).get(GoodsListActivityViewModel.class);
+        goodsListActivityViewModel.get().observe(this, this::onItemsLoaded);
     }
 
     private void initGoodsListView() {
@@ -49,8 +47,7 @@ public class GoodsListActivity extends AppCompatActivity {
 
             @Override
             protected ShopListItemBinding createBinding(ViewGroup parent) {
-                ShopListItemBinding binding = ShopListItemBinding.inflate(LayoutInflater.from(GoodsListActivity.this), parent, false);
-                return binding;
+                return ShopListItemBinding.inflate(LayoutInflater.from(GoodsListActivity.this), parent, false);
             }
 
             @Override
@@ -70,13 +67,14 @@ public class GoodsListActivity extends AppCompatActivity {
 
     private void onItemsLoaded(List<Item> response) {
         loadingDialog.dismiss();
+        if (response.isEmpty()) {
+            new ErrorDialog().show(getSupportFragmentManager(), ErrorDialog.TAG);
+        }
         adapter.setItems(response);
     }
 
     @Override
-    public void onBackPressed() {
-        if (!loadingDialog.isResumed()) {
-            super.onBackPressed();
-        }
+    public void onRetryClick() {
+        goodsListActivityViewModel.get();
     }
 }

@@ -25,8 +25,8 @@ public class GoodsListActivityViewModel extends ViewModel {
     final private MutableLiveData<List<Item>> items = new MutableLiveData<>();
     private Disposable subscribe;
 
-    public LiveData<List<Item>> get() {
-        if (items.getValue() == null) {
+    LiveData<List<Item>> get() {
+        if (items.getValue() == null || items.getValue().isEmpty()) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://api.jeench.com/")
                     .addConverterFactory(GsonConverterFactory.create())
@@ -41,9 +41,7 @@ public class GoodsListActivityViewModel extends ViewModel {
                         response.message = Collections.emptyList();
                         return response;
                     })
-                    .subscribe(response -> {
-                        items.postValue(response.message);
-                    });
+                    .subscribe(response -> items.postValue(response.message));
         }
 
         return items;
