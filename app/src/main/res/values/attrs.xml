@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SatelliteProgressBar">
+        <attr name="startAngle" format="float" />
+        <attr name="mainColor" format="color" />
+        <attr name="secondaryColor" format="color" />
+        <attr name="angle" format="float" />
+        <attr name="orbitStrokeWidth" format="dimension" />
+    </declare-styleable>
+</resources>

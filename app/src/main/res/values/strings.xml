@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">ShopList</string>
+    <string name="open_now_button_text">Open now</string>
+    <string name="open_now_stub_text">Открываем (нет)</string>
+    <string name="loadingText">Загружаем контент</string>
+</resources>
